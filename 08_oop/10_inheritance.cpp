@@ -1,83 +1,78 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
 using namespace std;
 
-// base/main/parent class
+// base class 
 class Tea {
     protected:
         string teaName;
         int servings;
     public:
-        Tea(string name, int serve): teaName(name), servings(serve){
-            cout << "Tea constructor called " << teaName << endl;
-        }
+        Tea(string name, int servings) : teaName(name), servings(servings) {
+            cout << "Tea constructor called for " << teaName << endl;
+      }
 
         virtual void brew() const {
-            cout << "Brewing " << teaName << " with generic method" << endl;
+            cout << "Brewing " << teaName << " with generic method." << endl;
         }
         virtual void serve() const {
-            cout << "Serving " << servings << " cup of tea with generic method" << endl;
+            cout << "serving " << servings << " cups of " << teaName << "." << endl;
         }
-
-        virtual ~Tea(){
+        // Virtual destructor for proper cleanup of derived classes
+        virtual ~Tea() {
             cout << "Tea destructor called for " << teaName << endl;
         }
-
-    
 };
 
-class GreenTea: public Tea {
+class GreenTea : public Tea {
     public:
-        GreenTea(int serve): Tea("Green Tea", serve){
-            cout << "Green tea constructor called" << endl;
+        GreenTea(int serv) : Tea("Green Tea", serv) {
+            cout << "GreenTea constructor called." << endl; cout << endl;
         }
-
+        
         void brew() const override {
-            cout << "Brewing" << teaName << " by steeping green tea leaves" << endl;
+            cout << "Brewing " << teaName << " with green tea method." << endl;
         }
-
-        ~GreenTea(){
-            cout << "Green tea constructor called " << endl;
+        ~GreenTea() {
+            cout << "GreenTea destructor called." << endl;
         }
 };
 
 class MasalaTea : public Tea {
-    public: 
-        MasalaTea(int serve) : Tea("Masala Tea", serve){
-            cout << "MasalaTea constructor called" << endl;
+    public:
+        MasalaTea (int serv) : Tea("Masala Tea", serv) {
+            cout << "MasalaTea constructor called." << endl; cout << endl;
         }
-
-        void brew() const override final {
-            cout << "Brewing" << teaName << " with spices and milk" << endl;
+        void brew() const override final { // final keyword prevents further overriding
+            cout << "Brewing " << teaName << " with Masala tea method." << endl;
         }
-
-        ~MasalaTea(){
-            cout << "Masala tea desctrutor called" << endl;
+        ~MasalaTea() {
+            cout << "MasalaTea destructor called." << endl;
         }
 };
 
-// class SpicyMasalaTea: public MasalaTea{
+// class SpicyMasalaTea : public MasalaTea {
 //     public:
-//         void brew() const override{
-//             cout << "Brewing" << teaName << " with spices and milk" << endl;
+//         void brew() const override {
+//             cout << "Brewing " << teaName << " with spicy masala tea method." << endl;
 //         }
 // };
+/*uncomment to see the function of final key*/
 
-int main(){
+int main () {
 
     Tea* tea1 = new GreenTea(2);
     Tea* tea2 = new MasalaTea(3);
 
-    tea1->brew();
-    tea1->serve();
+    tea1->brew(); 
+    tea1->serve(); cout << endl;
 
     tea2->brew();
-    tea2->serve();
+    tea2->serve(); cout << endl;
 
-    delete tea1;
-    delete tea2;
-
+    delete tea1; cout << endl;
+    delete tea2; cout << endl;
+    
     return 0;
 }
