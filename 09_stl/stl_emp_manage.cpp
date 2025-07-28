@@ -1,11 +1,10 @@
+//              =====Creating of a Employee management system using STL=====
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <algorithm> // for sort, find_if, etc.
 #include <numeric>
 #include <iterator>
 #include <string>
-
-
 using namespace std;
 
 struct Employee {
@@ -14,50 +13,74 @@ struct Employee {
     double salary;
 };
 
-
-void displayEmployee(const Employee& emp){
-    cout << "ID: " << emp.id << " , Name: " << emp.name << " , Salary: $" << emp.salary << endl;
+// Function to display employee details
+// This function takes an Employee object and prints its details
+// It is used with for_each to display each employee's information
+// The function is defined outside of main to keep the code organized
+// and to allow it to be reused if needed.
+void displayEmployees (const Employee& emp) {
+    cout << "ID: " << emp.id << ", Name: " << emp.name << ", Salary: " << emp.salary << endl;
 }
 
-int main(){
-
+int main () {
+    // Create a vector of employees
     vector<Employee> employees = {
-        {101, "hitesh", 100000},
-        {102, "saksham", 30000},
-        {103, "shubham", 50000},
-        {104, "anirudh", 60000},
-        {105, "aryan", 70000},
+        {1, "Alice", 50000},
+        {2, "Bob", 60000},
+        {3, "Charlie", 55000},
+        {4, "David", 70000},
+        {5, "Eve", 45000},
+        {6, "Frank", 80000},
+        {7, "Grace", 52000},
+        {8, "Hannah", 75000},
+        {9, "Ian", 48000},
+        {10, "Jack", 62000}
     };
 
-    sort(employees.begin(), employees.end(), [](const Employee& e1, const Employee& e2){
-        return e1.salary > e2.salary;
+    
+//__________________________________________1_____________________________________________
+    // sort is used to sort the employees by their salary
+    sort(employees.begin(), employees.end(), [](const Employee& a, const Employee& b) {
+        return a.salary > b.salary;
     });
+    cout << "=== Employees sorted by salary--> (highest to lowest) ===\n" << endl;
 
-    cout << "Employees sorted by salary -> Highest to lowest \n";
-    for_each(employees.begin(), employees.end(), displayEmployee);
+    for_each(employees.begin(), employees.end(), displayEmployees); cout << endl;
+    // for_each is used to display each employee's details
 
-    vector<Employee> highEarners;
+//___________________________________________2____________________________________________
+    // copy_if is used to copy high earners to a new vector
+    vector<Employee> HighEarners;
 
-    copy_if(
-        employees.begin(), 
-        employees.end(), 
-        back_inserter(highEarners), 
-        [](const Employee& e){
-        return e.salary > 50000;
-    });
+    copy_if(employees.begin(), 
+            employees.end(), 
+            back_inserter(HighEarners), // back_inserter is used to insert elements into HighEarners
+            [](const Employee& emp) {
+                return emp.salary > 55000;
+                }
+            );
+    cout << "=== High earners (salary > 55000) ===\n" << endl;
+    for_each(HighEarners.begin(), HighEarners.end(), displayEmployees); cout << endl;
 
-    cout << "Employees who are high earners \n";
-    for_each(highEarners.begin(), highEarners.end(), displayEmployee);
+//___________________________________________3____________________________________________
+    // accumulate is used to calculate the total salary of all employees
+    double totalSalary = accumulate(employees.begin(), employees.end(), 0.0, 
+                        [](double sum, const Employee& emp)
+                        {return sum + emp.salary;}
+                        );
+    cout << "Total salary of all employees: " << totalSalary << endl; cout << endl;
 
-    double totalSalary = accumulate(employees.begin(), employees.end(), 0.0, [](double sum, const Employee& e){
-        return sum + e.salary;
-    });
+//__________________________________________4_____________________________________________
+    double averageSalary = totalSalary / employees.size();
+    cout << "Average salary of all employees: " << averageSalary << endl; cout << endl;
 
-    double avaerageSalary = totalSalary / employees.size();
+//__________________________________________5_____________________________________________
+    auto highestPaid = max_element(employees.begin(), employees.end(), 
+                                [](const Employee& a, const Employee& b) {
+                                    return a.salary < b.salary;
+                                });
+    cout << "Highest paid employee: " << endl;
+    displayEmployees(*highestPaid); cout << endl;
 
-    auto highestPaid = max_element(employees.begin(), employees.end(), [](const Employee& e1, const Employee& e2){
-        return e1.salary < e2.salary;
-    });
-
-    return 0;
+ return 0;
 }
